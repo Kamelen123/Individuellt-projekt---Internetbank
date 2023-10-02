@@ -20,7 +20,6 @@ namespace Individuellt_projekt___Internetbank
                 var menuOption = int.Parse(Console.ReadLine());
                 switch (menuOption)
                 {
-
                     case 1:
                         Console.WriteLine("Your current balance is " + balance);
                         break;
