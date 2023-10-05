@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Security.Principal;
 
 namespace Individuellt_projekt___Internetbank
 {
@@ -7,6 +8,9 @@ namespace Individuellt_projekt___Internetbank
         static void Main(string[] args)
         {
             bool bankRunning = true;
+            string[] userVektor = new string[] {"Torbjörn","Albin","Lovisa","Karin","Daniel"};
+            double[] userPayrollAccount = new double[] {10000.50, 1000.50,100.50,10.50,1.50};
+            double[] userSavingsAccount = new double[] { 20000.50, 2000.50, 200.50, 20.50};
 
             while (bankRunning)
             {
@@ -14,16 +18,16 @@ namespace Individuellt_projekt___Internetbank
                 {
                     Console.Write("Enter pin: ");
                     int pin = int.Parse(Console.ReadLine());
-                    int x = LogIn(pin);
+                    int user = LogIn(pin);
                     if (i == 3)
                     {
                         bankRunning = false;
                     }
-                    while (x == 0)
+                    while (user == 0|| user == 1 || user == 2 || user == 3 || user == 4)
                     {
                         var balance = 0;
                         backToMenu:
-                        Console.WriteLine("Welcome to BigBank");
+                        Console.WriteLine("Welcome " + userVektor[user] + " to BigBank");
                         Console.WriteLine("Press [1] to view balance");
                         Console.WriteLine("Press [2] to transfer funds");
                         Console.WriteLine("Press [3] to withdrawal funds");
@@ -32,7 +36,7 @@ namespace Individuellt_projekt___Internetbank
                         switch (menuOption)
                         {
                             case 1:
-                                Console.WriteLine("Your current balance is " + balance);
+                                Console.WriteLine("Your current balance is " + userPayrollAccount[user]);
                                 break;
                             case 2:
                                 break;
@@ -72,13 +76,33 @@ namespace Individuellt_projekt___Internetbank
         {
             if (pin == 1234)
             {
-                int x = 0;
-                return x;
+                int user = 0;
+                return user;
+            }
+            else if (pin == 1235)
+            {
+                int user = 1;
+                return user;
+            }
+            else if (pin == 1236)
+            {
+                int user = 2;
+                return user;
+            }
+            else if (pin == 1237)
+            {
+                int user = 3;
+                return user;
+            }
+            else if (pin == 1238)
+            {
+                int user = 4;
+                return user;
             }
             else
             {
-                int x = 1;
-                return x;
+                int user = 5;
+                return user;
             }
         }
     }
