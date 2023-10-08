@@ -9,7 +9,7 @@ namespace Individuellt_projekt___Internetbank
         {
             bool bankRunning = true;
             string[] userVektor = new string[] {"Torbjörn","Albin","Lovisa","Karin","Daniel"};
-            double[] userPayrollAccount = new double[] {10000.50, 1000.50,100.50,10.50,1.50};
+            double[] userCheckingAccount = new double[] {10000.50, 1000.50,100.50,10.50,1.50};
             double[] userSavingsAccount = new double[] { 20000.50, 2000.50, 200.50, 20.50};
 
             while (bankRunning)
@@ -36,9 +36,15 @@ namespace Individuellt_projekt___Internetbank
                         switch (menuOption)
                         {
                             case 1:
-                                Console.WriteLine("Your current balance is " + userPayrollAccount[user]);
+                                Console.WriteLine("Your current balance in your checking account is: " + userCheckingAccount[user] + " Kr");
+                                if (user != 4) // this if statement prevents a "crash" that would occur if user 4 tries to accses userSavingsAccount, because it does not have a fifth element. 
+                                {
+                                    Console.WriteLine("Your current balance in your savings account is: " + userSavingsAccount[user] + " Kr");
+                                    Console.WriteLine("Your total balance is: " + (userSavingsAccount[user] + userCheckingAccount[user]) + " Kr");
+                                }
                                 break;
                             case 2:
+                                Console.WriteLine("Transfer funds");
                                 break;
                             case 3:
                                 break;
