@@ -55,7 +55,7 @@ namespace Individuellt_projekt___Internetbank
                         {
                             Console.Clear() ;
                             Console.WriteLine("Please enter a Option between 1-4");
-                            Console.Write("Press enter to return to main menu");
+                            Console.Write("Press enter to return to main menu...");
                             Console.ReadKey();
                         }
                         switch (menuOption)
@@ -71,43 +71,12 @@ namespace Individuellt_projekt___Internetbank
                             case 2:
                                 try
                                 {
-                                    if (user != 4)
-                                    {
-                                        Console.Clear();
-                                        Console.WriteLine("Transfer");
-                                        Console.WriteLine("Please select from one of the following accounts...");
-                                        for (int j = 0; j < usersAccounts[user].Length; j++)
-                                        {
-                                            Console.WriteLine($"{Accounts[j]} {usersAccounts[user][j]:C}");
-                                        }
-                                        Console.WriteLine("Please select an account to transfer funds from: ");
-                                        int from = int.Parse(Console.ReadLine()) - 1;
-                                        Console.WriteLine("Please select an account to transfer funds to: ");
-                                        int to =  int.Parse(Console.ReadLine()) - 1;
-                                        Console.WriteLine("how much do you want to transfer: ");
-                                        double amount = int.Parse(Console.ReadLine());
-                                        if (amount > usersAccounts[user][from])
-                                        {
-                                            Console.WriteLine("Sorry you don't have sufficient funds to make the transfer");
-                                            Console.Write("Press enter to return to main menu...");
-                                            Console.ReadKey();
-                                        }
-                                        else
-                                        {
-                                            usersAccounts[user][from] = usersAccounts[user][from] - amount;
-                                            usersAccounts[user][to] = usersAccounts[user][to] + amount;
-                                        }
-                                    }
-                                    else 
-                                    { 
-                                        Console.WriteLine("Sorry you need more than one account to make transfers");
-                                        Console.Write("Press enter to return to main menu...");
-                                        Console.ReadKey();
-                                    }
+                                    TransferFunds(user);
                                 }
                                 catch (Exception ex)
                                 {
                                     Console.WriteLine(ex.Message);
+                                    Console.ReadKey();
                                 }
                                 break;
                             case 3:
@@ -183,8 +152,40 @@ namespace Individuellt_projekt___Internetbank
         }
         static void TransferFunds(int user)
         {
-            
-            
+            if (user != 4)
+            {
+                Console.Clear();
+                Console.WriteLine("Transfer");
+                Console.WriteLine("Please select from one of the following accounts...");
+                for (int j = 0; j < usersAccounts[user].Length; j++)
+                {
+                    Console.WriteLine($"{Accounts[j]} {usersAccounts[user][j]:C}");
+                }
+                Console.WriteLine("Please select an account to transfer funds from: ");
+                int from = int.Parse(Console.ReadLine()) - 1;
+                Console.WriteLine("Please select an account to transfer funds to: ");
+                int to = int.Parse(Console.ReadLine()) - 1;
+                Console.WriteLine("how much do you want to transfer: ");
+                double amount = int.Parse(Console.ReadLine());
+                if (amount > usersAccounts[user][from])
+                {
+                    Console.WriteLine("Sorry you don't have sufficient funds to make the transfer");
+                    Console.Write("Press enter to return to main menu...");
+                    Console.ReadKey();
+                }
+                else
+                {
+                    usersAccounts[user][from] = usersAccounts[user][from] - amount;
+                    usersAccounts[user][to] = usersAccounts[user][to] + amount;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Sorry you need more than one account to make transfers");
+                Console.Write("Press enter to return to main menu...");
+                Console.ReadKey();
+            }
+
         }
 
     }
