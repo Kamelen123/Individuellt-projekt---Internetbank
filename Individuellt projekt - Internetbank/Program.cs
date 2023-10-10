@@ -3,19 +3,29 @@ using System.Security.Principal;
 
 namespace Individuellt_projekt___Internetbank
 {
+    
     internal class Program
     {
+        static double[][] usersAccounts = new double[][]
+        {
+        new double[] {10000.50, 1000.50,100.50,10.50,1.50},
+        new double[] { 20000.50, 2000.50, 200.50, 20.50 },
+        new double[] { 10000.50, 1000.50, 100.50 },
+        new double[] { 10000.50, 1000.50 },
+        new double[] { 10000.50 }
+        };
+        static string[] usersName = { "Torbjörn", "Albin", "Lovisa", "Karin", "Daniel" };
+        static string[] Accounts = { "1. CheckingAccount: ", "2. SavingsAccount: ", "3. HolidayAccount: ", "4. EvrydayAccount: ", "5. RainyDayFunds: " };
         static void Main(string[] args)
         {
             bool bankRunning = true;
-            string[] userVektor = new string[] {"Torbjörn","Albin","Lovisa","Karin","Daniel"};
-            double[] userCheckingAccount = new double[] {10000.50, 1000.50,100.50,10.50,1.50};
-            double[] userSavingsAccount = new double[] { 20000.50, 2000.50, 200.50, 20.50};
-
+            
             while (bankRunning)
             {
                 for (int i = 1; i < 4; i++) 
                 {
+                    Console.WriteLine("Welcome to HappyBank");
+                    Console.WriteLine("Please enter cardnumber and pin to log in...");
                     Console.Write("Enter pin: ");
                     int pin = int.Parse(Console.ReadLine());
                     int user = LogIn(pin);
@@ -23,28 +33,82 @@ namespace Individuellt_projekt___Internetbank
                     {
                         bankRunning = false;
                     }
+
+
                     while (user == 0|| user == 1 || user == 2 || user == 3 || user == 4)
                     {
-                        var balance = 0;
+                        Console.Clear();
                         backToMenu:
-                        Console.WriteLine("Welcome " + userVektor[user] + " to BigBank");
+
+                        Console.WriteLine($"current user: {usersName[user]}");
                         Console.WriteLine("Press [1] to view balance");
                         Console.WriteLine("Press [2] to transfer funds");
                         Console.WriteLine("Press [3] to withdrawal funds");
                         Console.WriteLine("Press [4] to log out");
-                        var menuOption = int.Parse(Console.ReadLine());
+                        Console.Write(": ");
+                        int menuOption = 0;
+                        try 
+                        {
+                            menuOption = int.Parse(Console.ReadLine());
+                        }
+                        catch
+                        {
+                            Console.Clear() ;
+                            Console.WriteLine("Please enter a Option between 1-4");
+                            Console.Write("Press enter to return to main menu");
+                            Console.ReadKey();
+                        }
                         switch (menuOption)
                         {
                             case 1:
-                                Console.WriteLine("Your current balance in your checking account is: " + userCheckingAccount[user] + " Kr");
-                                if (user != 4) // this if statement prevents a "crash" that would occur if user 4 tries to accses userSavingsAccount, because it does not have a fifth element. 
-                                {
-                                    Console.WriteLine("Your current balance in your savings account is: " + userSavingsAccount[user] + " Kr");
-                                    Console.WriteLine("Your total balance is: " + (userSavingsAccount[user] + userCheckingAccount[user]) + " Kr");
-                                }
+
+                                Console.Clear();
+                                ViewBalance(user);
+                                Console.Write("Press enter to return to main menu...");
+                                Console.ReadKey();
+
                                 break;
                             case 2:
-                                Console.WriteLine("Transfer funds");
+                                try
+                                {
+                                    if (user != 4)
+                                    {
+                                        Console.Clear();
+                                        Console.WriteLine("Transfer");
+                                        Console.WriteLine("Please select from one of the following accounts...");
+                                        for (int j = 0; j < usersAccounts[user].Length; j++)
+                                        {
+                                            Console.WriteLine($"{Accounts[j]} {usersAccounts[user][j]:C}");
+                                        }
+                                        Console.WriteLine("Please select an account to transfer funds from: ");
+                                        int from = int.Parse(Console.ReadLine()) - 1;
+                                        Console.WriteLine("Please select an account to transfer funds to: ");
+                                        int to =  int.Parse(Console.ReadLine()) - 1;
+                                        Console.WriteLine("how much do you want to transfer: ");
+                                        double amount = int.Parse(Console.ReadLine());
+                                        if (amount > usersAccounts[user][from])
+                                        {
+                                            Console.WriteLine("Sorry you don't have sufficient funds to make the transfer");
+                                            Console.Write("Press enter to return to main menu...");
+                                            Console.ReadKey();
+                                        }
+                                        else
+                                        {
+                                            usersAccounts[user][from] = usersAccounts[user][from] - amount;
+                                            usersAccounts[user][to] = usersAccounts[user][to] + amount;
+                                        }
+                                    }
+                                    else 
+                                    { 
+                                        Console.WriteLine("Sorry you need more than one account to make transfers");
+                                        Console.Write("Press enter to return to main menu...");
+                                        Console.ReadKey();
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine(ex.Message);
+                                }
                                 break;
                             case 3:
                                 break;
@@ -67,8 +131,6 @@ namespace Individuellt_projekt___Internetbank
                                 catch (Exception ex)
                                 {
                                     Console.WriteLine(ex.Message);
-                                    Console.Write("Press anykey to return");
-                                    Console.Read();
                                 }
                                 break;
                         }
@@ -111,5 +173,19 @@ namespace Individuellt_projekt___Internetbank
                 return user;
             }
         }
+        static void ViewBalance (int user)
+        {
+            Console.WriteLine("Balance");
+            for (int i = 0; i < usersAccounts[user].Length; i++)
+            {
+                Console.WriteLine($"{Accounts[i]} {usersAccounts[user][i]:C}");
+            }
+        }
+        static void TransferFunds(int user)
+        {
+            
+            
+        }
+
     }
 }
