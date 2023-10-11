@@ -22,8 +22,9 @@ namespace Individuellt_projekt___Internetbank
             
             while (bankRunning)
             {
-                for (int i = 1; i < 4; i++) 
+                for (int count = 1; count < 4; count++) // använder mig av en integer count för att räkna antal försök som sedan nollställs när användaren loggar ut
                 {
+                    //try catch
                     Console.WriteLine("Welcome to HappyBank");
                     Console.WriteLine("Please enter cardnumber and pin to log in...");
                     Console.Write("Enter card number:");
@@ -31,10 +32,12 @@ namespace Individuellt_projekt___Internetbank
                     Console.Write("Enter pin: ");
                     int pin = int.Parse(Console.ReadLine());
                     int user = LogIn(pin,cardNumber);
-                    if (i == 3)
+                    if (count == 3)
                     {
                         bankRunning = false;
                     }
+
+                    Console.WriteLine("Please try again, you have " + (3 - count) + " attempts left!");
 
 
                     while (user == 0|| user == 1 || user == 2 || user == 3 || user == 4)
@@ -101,6 +104,8 @@ namespace Individuellt_projekt___Internetbank
                                     {
                                         Console.WriteLine($"Goodbye, {usersName[user]}!");
                                         Console.ReadKey();
+                                        Console.Clear();
+                                        count = 0;
                                         user = 5;
                                     }
                                     else if (exitOption.ToLower() == "n")
@@ -116,12 +121,12 @@ namespace Individuellt_projekt___Internetbank
                         }
 
                     }
-                    Console.WriteLine("Please try again, you have " + (3 - i) + " attempts left!");
                 }
             }
         }
         static int LogIn(int pin, int cardNumber)
         {
+            //cardNumbers
             if (pin == 1234 && cardNumber == 12345)
             {
                 int user = 0;
@@ -215,6 +220,7 @@ namespace Individuellt_projekt___Internetbank
                 var optionMaxWithdrawal = Console.ReadLine();
                 if (optionMaxWithdrawal.ToLower() == "y")
                 {
+                    // if sats för att kontrolera lösenord
                     usersAccounts[user][accountSelected] = usersAccounts[user][accountSelected] - usersAccounts[user][accountSelected];
                     Console.WriteLine("Withdrawal Completed...");
                     Console.WriteLine($"New Balance");
@@ -230,6 +236,8 @@ namespace Individuellt_projekt___Internetbank
             }
             else
             {
+
+                // if sats för att kontrolera lösenord
                 usersAccounts[user][accountSelected] = usersAccounts[user][accountSelected] - amountWithdrawal;
                 Console.WriteLine("Withdrawal Completed...");
                 Console.WriteLine($"New Balance");
@@ -244,6 +252,9 @@ namespace Individuellt_projekt___Internetbank
                 Console.WriteLine($"{Accounts[i]} {usersAccounts[user][i]:C}");
             }
         }
+
+        // metod för (press enter / Console.Clear()
+        // metod för slumpmässigt saldo
 
     }
 }
