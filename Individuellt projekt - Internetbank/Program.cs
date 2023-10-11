@@ -26,9 +26,11 @@ namespace Individuellt_projekt___Internetbank
                 {
                     Console.WriteLine("Welcome to HappyBank");
                     Console.WriteLine("Please enter cardnumber and pin to log in...");
+                    Console.Write("Enter card number:");
+                    int cardNumber = int.Parse(Console.ReadLine());
                     Console.Write("Enter pin: ");
                     int pin = int.Parse(Console.ReadLine());
-                    int user = LogIn(pin);
+                    int user = LogIn(pin,cardNumber);
                     if (i == 3)
                     {
                         bankRunning = false;
@@ -40,12 +42,12 @@ namespace Individuellt_projekt___Internetbank
                         Console.Clear();
                         backToMenu:
 
-                        Console.WriteLine($"current user: {usersName[user]}");
+                        Console.WriteLine($"Current user: {usersName[user]}");
                         Console.WriteLine("Press [1] to view balance");
                         Console.WriteLine("Press [2] to transfer funds");
                         Console.WriteLine("Press [3] to withdrawal funds");
                         Console.WriteLine("Press [4] to log out");
-                        Console.Write(": ");
+                        Console.Write("Select Option 1-4: ");
                         int menuOption = 0;
                         try 
                         {
@@ -80,6 +82,15 @@ namespace Individuellt_projekt___Internetbank
                                 }
                                 break;
                             case 3:
+                                try
+                                {
+                                    Withdrawal(user);
+                                }
+                                catch (Exception ex)
+                                { 
+                                    Console.WriteLine(ex.Message); 
+                                    Console.ReadKey();
+                                }
                                 break;
                             case 4:
                                 try
@@ -109,9 +120,9 @@ namespace Individuellt_projekt___Internetbank
                 }
             }
         }
-        static int LogIn(int pin)
+        static int LogIn(int pin, int cardNumber)
         {
-            if (pin == 1234)
+            if (pin == 1234 && cardNumber == 12345)
             {
                 int user = 0;
                 return user;
@@ -161,11 +172,11 @@ namespace Individuellt_projekt___Internetbank
                 {
                     Console.WriteLine($"{Accounts[j]} {usersAccounts[user][j]:C}");
                 }
-                Console.WriteLine("Please select an account to transfer funds from: ");
+                Console.Write("Please select an account to transfer funds from: ");
                 int from = int.Parse(Console.ReadLine()) - 1;
-                Console.WriteLine("Please select an account to transfer funds to: ");
+                Console.Write("Please select an account to transfer funds to: ");
                 int to = int.Parse(Console.ReadLine()) - 1;
-                Console.WriteLine("how much do you want to transfer: ");
+                Console.Write("how much do you want to transfer: ");
                 double amount = int.Parse(Console.ReadLine());
                 if (amount > usersAccounts[user][from])
                 {
@@ -177,6 +188,9 @@ namespace Individuellt_projekt___Internetbank
                 {
                     usersAccounts[user][from] = usersAccounts[user][from] - amount;
                     usersAccounts[user][to] = usersAccounts[user][to] + amount;
+                    Console.WriteLine("Transfer Completed");
+                    Console.Write("Press enter to return to main menu...");
+                    Console.ReadKey();
                 }
             }
             else
@@ -186,6 +200,52 @@ namespace Individuellt_projekt___Internetbank
                 Console.ReadKey();
             }
 
+        }
+        static void Withdrawal (int user)
+        {
+            Console.Clear();
+            Console.WriteLine("Withdrawal funds from one of the following accounts");
+            DisplayAccounts(user);
+            Console.Write("Select account: ");
+            int accountSelected = int.Parse(Console.ReadLine()) - 1;
+            Console.Write("Enter amout to withdrawal: ");
+            int amountWithdrawal = int.Parse(Console.ReadLine());
+            if (amountWithdrawal > usersAccounts[user][accountSelected])
+            {
+                Console.WriteLine($"Sorry you can only withdrawal {usersAccounts[user][accountSelected]:C} from Account: {Accounts[accountSelected]}");
+                Console.ReadKey ();
+                Console.Write("Do you want to withdrawal the maximum amount from this account? y/n : ");
+                var optionMaxWithdrawal = Console.ReadLine();
+                if (optionMaxWithdrawal.ToLower() == "y")
+                {
+                    usersAccounts[user][accountSelected] = usersAccounts[user][accountSelected] - usersAccounts[user][accountSelected];
+                    Console.WriteLine("Withdrawal Completed...");
+                    Console.WriteLine($"New Balance");
+                    Console.WriteLine($"{usersAccounts[user][accountSelected]:C}");
+                    Console.ReadKey();
+                }
+                else
+                {
+                    Console.Write("Press enter to return to main menu...");
+                    Console.ReadKey();
+                }
+
+            }
+            else
+            {
+                usersAccounts[user][accountSelected] = usersAccounts[user][accountSelected] - amountWithdrawal;
+                Console.WriteLine("Withdrawal Completed...");
+                Console.WriteLine($"New Balance");
+                Console.WriteLine($"{usersAccounts[user][accountSelected]:C}");
+                Console.ReadKey ();
+            }
+        }
+        static void DisplayAccounts(int user)
+        {
+            for (int i = 0; i < usersAccounts[user].Length; i++)
+            {
+                Console.WriteLine($"{Accounts[i]} {usersAccounts[user][i]:C}");
+            }
         }
 
     }
