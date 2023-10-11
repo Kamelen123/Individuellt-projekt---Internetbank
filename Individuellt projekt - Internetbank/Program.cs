@@ -12,7 +12,7 @@ namespace Individuellt_projekt___Internetbank
         new double[] { 20000.50, 2000.50, 200.50, 20.50 },
         new double[] { 10000.50, 1000.50, 100.50 },
         new double[] { 10000.50, 1000.50 },
-        new double[] { 10000.50 }
+        new double[] { 10000.50, }
         };
         static string[] usersName = { "Torbjörn", "Albin", "Lovisa", "Karin", "Daniel" };
         static string[] Accounts = { "1. CheckingAccount: ", "2. SavingsAccount: ", "3. HolidayAccount: ", "4. EvrydayAccount: ", "5. RainyDayFunds: " };
@@ -99,9 +99,9 @@ namespace Individuellt_projekt___Internetbank
                                     var exitOption = Console.ReadLine();
                                     if (exitOption.ToLower() == "y")
                                     {
-                                        Console.WriteLine("Goodbye!");
-                                        Console.Read();
-                                        bankRunning = false;
+                                        Console.WriteLine($"Goodbye, {usersName[user]}!");
+                                        Console.ReadKey();
+                                        user = 5;
                                     }
                                     else if (exitOption.ToLower() == "n")
                                     {
@@ -168,10 +168,7 @@ namespace Individuellt_projekt___Internetbank
                 Console.Clear();
                 Console.WriteLine("Transfer");
                 Console.WriteLine("Please select from one of the following accounts...");
-                for (int j = 0; j < usersAccounts[user].Length; j++)
-                {
-                    Console.WriteLine($"{Accounts[j]} {usersAccounts[user][j]:C}");
-                }
+                DisplayAccounts(user);
                 Console.Write("Please select an account to transfer funds from: ");
                 int from = int.Parse(Console.ReadLine()) - 1;
                 Console.Write("Please select an account to transfer funds to: ");
