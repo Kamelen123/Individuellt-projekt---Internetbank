@@ -3,35 +3,56 @@ using System.Security.Principal;
 
 namespace Individuellt_projekt___Internetbank
 {
-    
+
     internal class Program
     {
         static double[][] usersAccounts = new double[][]
         {
-        new double[] {10000.50, 1000.50,100.50,10.50,1.50},
-        new double[] { 20000.50, 2000.50, 200.50, 20.50 },
-        new double[] { 10000.50, 1000.50, 100.50 },
-        new double[] { 10000.50, 1000.50 },
-        new double[] { 10000.50, }
+        new double[] {0,0,0,0,0},
+        new double[] {0,0,0,0},
+        new double[] {0,0,0},
+        new double[] {0,0},
+        new double[] {0,}
         };
         static string[] usersName = { "Torbjörn", "Albin", "Lovisa", "Karin", "Daniel" };
         static string[] Accounts = { "1. CheckingAccount: ", "2. SavingsAccount: ", "3. HolidayAccount: ", "4. EvrydayAccount: ", "5. RainyDayFunds: " };
         static void Main(string[] args)
         {
+            Random random = new Random();
+            for (int i = 0; i < usersAccounts.Length; i++)
+            {
+                for(int j = 0; j < usersAccounts[i].Length; j++)
+                {
+                    double blance = random.NextDouble();
+                    usersAccounts[i][j] = blance * 10000;
+                }
+            }
             bool bankRunning = true;
-            
+
             while (bankRunning)
             {
                 for (int count = 1; count < 4; count++) // använder mig av en integer count för att räkna antal försök som sedan nollställs när användaren loggar ut
                 {
-                    //try catch
-                    Console.WriteLine("Welcome to HappyBank");
-                    Console.WriteLine("Please enter cardnumber and pin to log in...");
-                    Console.Write("Enter card number:");
-                    int cardNumber = int.Parse(Console.ReadLine());
-                    Console.Write("Enter pin: ");
-                    int pin = int.Parse(Console.ReadLine());
-                    int user = LogIn(pin,cardNumber);
+                    int cardNumber = 0;
+                    int pin = 0;
+
+                    try
+                    {
+                        Console.WriteLine("Welcome to HappyBank");
+                        Console.WriteLine("Please enter cardnumber and pin to log in...");
+                        Console.Write("Enter card number:");
+                        cardNumber = int.Parse(Console.ReadLine());
+                        Console.Write("Enter pin: ");
+                        pin = int.Parse(Console.ReadLine());
+                    }
+                    catch (Exception ex) 
+                    {
+                        Console.WriteLine(ex.Message);
+                        EnterReadKey();
+                        Console.Clear();
+                    }
+                    
+                    int user = LogIn(pin, cardNumber);
                     if (count == 3)
                     {
                         bankRunning = false;
@@ -40,10 +61,10 @@ namespace Individuellt_projekt___Internetbank
                     Console.WriteLine("Please try again, you have " + (3 - count) + " attempts left!");
 
 
-                    while (user == 0|| user == 1 || user == 2 || user == 3 || user == 4)
+                    while (user == 0 || user == 1 || user == 2 || user == 3 || user == 4)
                     {
                         Console.Clear();
-                        backToMenu:
+                    backToMenu:
 
                         Console.WriteLine($"Current user: {usersName[user]}");
                         Console.WriteLine("Press [1] to view balance");
@@ -52,16 +73,15 @@ namespace Individuellt_projekt___Internetbank
                         Console.WriteLine("Press [4] to log out");
                         Console.Write("Select Option 1-4: ");
                         int menuOption = 0;
-                        try 
+                        try
                         {
                             menuOption = int.Parse(Console.ReadLine());
                         }
                         catch
                         {
-                            Console.Clear() ;
+                            Console.Clear();
                             Console.WriteLine("Please enter a Option between 1-4");
-                            Console.Write("Press enter to return to main menu...");
-                            Console.ReadKey();
+                            EnterReadKey();
                         }
                         switch (menuOption)
                         {
@@ -69,8 +89,7 @@ namespace Individuellt_projekt___Internetbank
 
                                 Console.Clear();
                                 ViewBalance(user);
-                                Console.Write("Press enter to return to main menu...");
-                                Console.ReadKey();
+                                EnterReadKey();
 
                                 break;
                             case 2:
@@ -90,8 +109,8 @@ namespace Individuellt_projekt___Internetbank
                                     Withdrawal(user);
                                 }
                                 catch (Exception ex)
-                                { 
-                                    Console.WriteLine(ex.Message); 
+                                {
+                                    Console.WriteLine(ex.Message);
                                     Console.ReadKey();
                                 }
                                 break;
@@ -158,7 +177,7 @@ namespace Individuellt_projekt___Internetbank
                 return user;
             }
         }
-        static void ViewBalance (int user)
+        static void ViewBalance(int user)
         {
             Console.WriteLine("Balance");
             for (int i = 0; i < usersAccounts[user].Length; i++)
@@ -179,31 +198,28 @@ namespace Individuellt_projekt___Internetbank
                 Console.Write("Please select an account to transfer funds to: ");
                 int to = int.Parse(Console.ReadLine()) - 1;
                 Console.Write("how much do you want to transfer: ");
-                double amount = int.Parse(Console.ReadLine());
+                double amount = double.Parse(Console.ReadLine());
                 if (amount > usersAccounts[user][from])
                 {
                     Console.WriteLine("Sorry you don't have sufficient funds to make the transfer");
-                    Console.Write("Press enter to return to main menu...");
-                    Console.ReadKey();
+                    EnterReadKey();
                 }
                 else
                 {
                     usersAccounts[user][from] = usersAccounts[user][from] - amount;
                     usersAccounts[user][to] = usersAccounts[user][to] + amount;
                     Console.WriteLine("Transfer Completed");
-                    Console.Write("Press enter to return to main menu...");
-                    Console.ReadKey();
+                    EnterReadKey();
                 }
             }
             else
             {
                 Console.WriteLine("Sorry you need more than one account to make transfers");
-                Console.Write("Press enter to return to main menu...");
-                Console.ReadKey();
+                EnterReadKey();
             }
 
         }
-        static void Withdrawal (int user)
+        static void Withdrawal(int user)
         {
             Console.Clear();
             Console.WriteLine("Withdrawal funds from one of the following accounts");
@@ -211,11 +227,10 @@ namespace Individuellt_projekt___Internetbank
             Console.Write("Select account: ");
             int accountSelected = int.Parse(Console.ReadLine()) - 1;
             Console.Write("Enter amout to withdrawal: ");
-            int amountWithdrawal = int.Parse(Console.ReadLine());
+            double amountWithdrawal = double.Parse(Console.ReadLine());
             if (amountWithdrawal > usersAccounts[user][accountSelected])
             {
                 Console.WriteLine($"Sorry you can only withdrawal {usersAccounts[user][accountSelected]:C} from Account: {Accounts[accountSelected]}");
-                Console.ReadKey ();
                 Console.Write("Do you want to withdrawal the maximum amount from this account? y/n : ");
                 var optionMaxWithdrawal = Console.ReadLine();
                 if (optionMaxWithdrawal.ToLower() == "y")
@@ -229,8 +244,7 @@ namespace Individuellt_projekt___Internetbank
                 }
                 else
                 {
-                    Console.Write("Press enter to return to main menu...");
-                    Console.ReadKey();
+                    EnterReadKey();
                 }
 
             }
@@ -240,9 +254,9 @@ namespace Individuellt_projekt___Internetbank
                 // if sats för att kontrolera lösenord
                 usersAccounts[user][accountSelected] = usersAccounts[user][accountSelected] - amountWithdrawal;
                 Console.WriteLine("Withdrawal Completed...");
-                Console.WriteLine($"New Balance");
-                Console.WriteLine($"{usersAccounts[user][accountSelected]:C}");
-                Console.ReadKey ();
+                Console.WriteLine("New Balance");
+                Console.WriteLine($"{Accounts[accountSelected]}{usersAccounts[user][accountSelected]:C}");
+                EnterReadKey();
             }
         }
         static void DisplayAccounts(int user)
@@ -252,9 +266,11 @@ namespace Individuellt_projekt___Internetbank
                 Console.WriteLine($"{Accounts[i]} {usersAccounts[user][i]:C}");
             }
         }
-
-        // metod för (press enter / Console.Clear()
-        // metod för slumpmässigt saldo
+        static void EnterReadKey()
+        {
+            Console.Write("Press enter to return to main menu...");
+            Console.ReadKey();
+        }
 
     }
 }
